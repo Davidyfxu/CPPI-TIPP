@@ -33,15 +33,12 @@ raw_data.set_index('day', inplace=True)
 # raw_data.drop(labels='Unnamed:0',axis=0,inplace=True)
 year = raw_data.resample('y')
 year.sum()  # 做一次无意义的运算  year才可以用来循环
-data = list()
-for i, j in year:
-    # print(str(i.year))
-    data.append(j)
+data = [j for i, j in year]
 
 
 Return = list()
 for i in range(len(data)):
-    # print(data[i].shape[0])
+
     test_num = 1
     rate_type = 0  # 0: simple  1:compound
 
