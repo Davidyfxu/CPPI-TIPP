@@ -9,11 +9,19 @@
 ### 公式
 
 $$
-A_t=D_t+E_t\\
-E_t=min\lbrace\ M*(A_t-F_t),A_t\rbrace\\
-A_t指t期总资产，D_t指无风险资产，\\
+A_t=D_t+E_t
+$$
+
+$$
+E_t=min\lbrace\ M*(A_t-F_t),A_t\rbrace
+$$
+
+$$
+A_t指t期总资产，D_t指无风险资产，
 E_t指风险资产，F_t指最低保险金额，M指投资乘数
 $$
+
+
 
 ### 例子
 
