@@ -14,7 +14,7 @@ def MaxDrawdown(return_list):
 
 
 def calc_rate(day, rate, rate_type):
-    if rate_type== 0:
+    if rate_type == 0:
         return (1 + rate*day)
     elif rate_type == 1:
         return np.exp(rate*day)
@@ -105,33 +105,37 @@ def outputQuantResult(Return, nav, trading_day_sum):
 
     return Results
 
+
 def main():
     data = getData(filename='zhongzheng500.xlsx')
     Return = []
     for i in range(len(data)):
         p = getParameters(trading_day_per_year=data[i].shape[0])
-    
+
         risk_asset = np.zeros(p["trading_day_sum"])  # 风险资产
         rf_asset = np.zeros(p["trading_day_sum"])  # 无风险资产
         min_pv_asset = np.zeros(p["trading_day_sum"])  # 价值底线
         nav = np.zeros(p["trading_day_sum"])  # 总资产
         nav[1] = p["init_nav"]
-    
+
         # TIPP策略
         # 第1天
         min_pv_asset[1] = p["guarantee_rate"] * p["init_nav"] / \
-            calc_rate(p["trading_day_sum"], p["rf_daily"], p["rate_type"])  # 第1天的价值底线
+            calc_rate(p["trading_day_sum"], p["rf_daily"],
+                      p["rate_type"])  # 第1天的价值底线
         risk_asset[1] = max(0, p["risk_multipler"] * (nav[1] -
                                                       min_pv_asset[1]))   # 风险资产 w/o fee
         rf_asset[1] = (nav[1] - risk_asset[1])  # 无风险资产
-        risk_asset[1] = risk_asset[1] * (1 - p["risk_trading_fee_rate"])  # 扣去手续费
+        risk_asset[1] = risk_asset[1] * \
+            (1 - p["risk_trading_fee_rate"])  # 扣去手续费
         # 第2天到最后1天
         for t in range(2, p["trading_day_sum"]):
             # 未止盈
             if p["is_take_profit"] == 0:
                 # 检查是否已经可以止盈
                 fv = nav[t - 1] * calc_rate(p["trading_day_sum"] - t, p["rf_daily"], p["rate_type"]) - \
-                    p["risk_trading_fee_rate"] * risk_asset[t-1]  # 去除所有的手续费后，看看是否满足止盈条件
+                    p["risk_trading_fee_rate"] * \
+                    risk_asset[t-1]  # 去除所有的手续费后，看看是否满足止盈条件
                 if fv/p["init_nav"] - 1 > p["take_profit_thresh"]:  # 止盈
                     risk_asset[t] = 0
                     rf_asset[t] = rf_asset[t-1] * calc_rate(1, p["rf_daily"], p["rate_type"]) + (
@@ -143,7 +147,7 @@ def main():
                     if nav[t - 1] / p["init_nav"] > p["guarantee_rate"] * (p["gaurant_adj_thresh"] + 1):
                         p["guarantee_rate"] += p["gaurant_inc"]
                         p["gaurant_inc_counter"] += 1
-    
+
                     min_pv_asset[t] = p["guarantee_rate"] * p["init_nav"] / \
                         calc_rate(p["trading_day_sum"] - t + 1,
                                   p["rf_daily"], p["rate_type"])  # 价值底线
@@ -152,7 +156,7 @@ def main():
                     rf_asset[t] = calc_rate(
                         1, p["rf_daily"], p["rate_type"]) * rf_asset[t - 1]
                     nav[t] = risk_asset[t] + rf_asset[t]
-    
+
                     # 定期调整
                     if (t - 1) % p["adj_period"] == 0:
                         risk_asset_b4_adj = risk_asset[t]
@@ -161,8 +165,9 @@ def main():
                         rf_asset[t] = nav[t] - risk_asset[t]  # 无风险资产
                         trade_value = risk_asset_b4_adj - risk_asset[t]
                         risk_asset[t] = risk_asset[t] - \
-                            abs(trade_value) * p["risk_trading_fee_rate"]  # 手续费
-    
+                            abs(trade_value) * \
+                            p["risk_trading_fee_rate"]  # 手续费
+
                     # 检查是否被强制平仓
                     if risk_asset[t] <= 0:
                         rf_asset[t] = nav[t] - risk_asset[t] * \
@@ -174,10 +179,10 @@ def main():
                     calc_rate(1, p["rf_daily"], p["rate_type"])
                 nav[t] = rf_asset[t]
         Return.append(nav[1:] / p["init_nav"])
-    
-    
+
     Results = outputQuantResult(Return, nav, p["trading_day_sum"])
     Results.to_excel("temp.xlsx")
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     main()

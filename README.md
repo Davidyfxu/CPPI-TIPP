@@ -9,7 +9,10 @@
 ### 公式
 
 $$
-A_t=D_t+E_t\\E_t=min\lbrace\ M*(A_t-F_t),A_t\rbrace\\A_t指t期总资产，D_t指无风险资产，\\E_t指风险资产，F_t指最低保险金额，M指投资乘数
+A_t=D_t+E_t\\
+E_t=min\lbrace\ M*(A_t-F_t),A_t\rbrace\\
+A_t指t期总资产，D_t指无风险资产，\\
+E_t指风险资产，F_t指最低保险金额，M指投资乘数
 $$
 
 ### 例子
@@ -194,8 +197,14 @@ if __name__ == "__main__":
 ### 公式
 
 $$
-A_t=D_t+E_t\\F_t=max\lbrace\ A_t*f,F_{t-1}\rbrace\\E_t=m*(A_t-F_t)\\A_t指t期总资产，D_t指无风险资产，f指固定的要保比率\\E_t指风险资产，F_t指t期最低保险金额，m指投资乘数
+A_t=D_t+E_t\\
+F_t=max\lbrace\ A_t*f,F_{t-1}\rbrace\\
+E_t=m*(A_t-F_t)\\
+A_t指t期总资产，D_t指无风险资产，f指固定的要保比率\\
+E_t指风险资产，F_t指t期最低保险金额，m指投资乘数
 $$
+
+
 
 ![](https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy8xNjU3NzIxMS04YzRlMGFiYzcwNGY4YjUxLnBuZw?x-oss-process=image/format,png)
 
